@@ -13,6 +13,13 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class GlyphConverter {
 
+    // XML Data
+    public static final String XML_ROOT_TAG = "ancientText";
+    public static final String XML_SIGN_TAG = "sign";
+    public static final String XML_V_TAG = "v";
+    public static final String XML_H_TAG = "h";
+    public static final String XML_ID_ATTRIBUTE = "id";
+
     public static String convertToMdC(String glyphX){
         try {
             return convertToMdC(convertToXmlDocument(glyphX));
