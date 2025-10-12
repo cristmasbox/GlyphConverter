@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Glyph Convert Example App</string>
+    <string name="title">Test the GlyphConvert library here:</string>
+    <string name="title_glyphx">GlyphX (Hieroglyph XML):</string>
+    <string name="title_mdc">MdC (Manuel de Codage):</string>#
+    <string name="button_glyphx_text">Convert to GlyphX</string>
+    <string name="button_mdc_text">Convert to MdC</string>
+    <string name="default_glyphx"><![CDATA[<ancientText><sign id="km"/><sign id="m"/><v><sign id="t"/><sign id="O49"/></v></ancientText>]]></string>
+    <string name="default_mdc">km-m-t:O49</string>
+</resources>
