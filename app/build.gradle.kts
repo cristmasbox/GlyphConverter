@@ -36,6 +36,9 @@ android {
 
 dependencies {
 
+    // Custom library
+    implementation(project(":glyphconverter"))
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
