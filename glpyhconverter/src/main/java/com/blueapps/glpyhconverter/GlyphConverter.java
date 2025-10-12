@@ -1,5 +1,7 @@
 package com.blueapps.glpyhconverter;
 
+import com.blueapps.glpyhconverter.tomdc.GlyphXToMdC;
+
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -30,7 +32,7 @@ public class GlyphConverter {
     }
 
     public static String convertToMdC(Document glyphX){
-        return "";
+        return GlyphXToMdC.convert(glyphX);
     }
 
     public static String convertToGlyphX(String MdC){
