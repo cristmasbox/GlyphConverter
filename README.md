@@ -27,6 +27,17 @@ dependencies {
 > [!NOTE]
 > For the implementation for other build systems like `Groovy` see [here](https://jitpack.io/#cristmasbox/GlyphConverter/)
 
+## Implementation with `.jar` file
+Download the `GlpyhConverter_versionname.jar` file from this repository, create a `libs` folder in your project directory and paste the file there. Then add this dependency to your `build.gradle.kts` file:
+```
+dependencies {
+  implementation(files("../libs/GlpyhConverter_versionname.jar"))
+}
+```
+
+> [!IMPORTANT]
+> If you renamed the `.jar` file you also have to change the name in the dependencies
+
 ## Version Catalog
 ### 25.10.2025@1.0.0
 This is the first release of the GlyphConverter library.
