@@ -37,7 +37,8 @@ android {
 dependencies {
 
     // Custom library
-    implementation(project(":glpyhconverter"))
+    //implementation(project(":glpyhconverter"))
+    implementation(libs.glyphconverter)
 
     implementation(libs.appcompat)
     implementation(libs.material)

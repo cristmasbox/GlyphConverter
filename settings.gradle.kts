@@ -16,9 +16,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }
     }
 }
 
 rootProject.name = "Glyph Convert"
 include(":app")
-include(":glpyhconverter")
+//include(":glpyhconverter")
