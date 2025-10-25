@@ -6,3 +6,23 @@ A library for converting between MdC (Manuel de Codage) and GlyphX (Hieroglpyh X
 > [!TIP]
 > If you want to render Hieroglyphs in Android try these libraries:
 > [THOTH](https://github.com/cristmasbox/THOTH) and [MAAT](https://github.com/cristmasbox/MAAT)
+
+## Implementation with jitpack
+Add this to your `settings.gradle.kts` at the end of repositories:
+```
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+  repositories {
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
+  }
+}
+```
+Then add this dependency to your `build.gradle.kts` file:
+```
+dependencies {
+  implementation("com.github.cristmasbox:GlyphConverter:1.0.0")
+}
+```
+> [!NOTE]
+> For the implementation for other build systems like `Groovy` see [here](https://jitpack.io/#cristmasbox/GlyphConverter/)
