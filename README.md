@@ -26,3 +26,9 @@ dependencies {
 ```
 > [!NOTE]
 > For the implementation for other build systems like `Groovy` see [here](https://jitpack.io/#cristmasbox/GlyphConverter/)
+
+## Version Catalog
+### 25.10.2025@1.0.0
+This is the first release of the GlyphConverter library.
+### latest Version
+`25.10.2025@1.0.0`
