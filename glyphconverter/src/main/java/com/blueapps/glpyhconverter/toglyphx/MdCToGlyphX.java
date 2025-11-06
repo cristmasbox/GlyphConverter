@@ -1,9 +1,11 @@
 package com.blueapps.glpyhconverter.toglyphx;
 
+import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_BRACKET_PROPORTION;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_CHARACTER;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_CHARACTER_COMBINATION;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_CHARACTER_COUNT;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_END_CHARACTER;
+import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_SINGLE_BRACKET;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_START_CHARACTER;
 
 import com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException;
@@ -13,7 +15,6 @@ import com.blueapps.glpyhconverter.toglyphx.items.SimpleItem;
 import com.blueapps.glpyhconverter.toglyphx.items.VerticalGroup;
 
 import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -26,8 +27,6 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 public class MdCToGlyphX {
 
@@ -127,6 +126,16 @@ public class MdCToGlyphX {
 
         }
 
+        // Check if every item has same count of '(' and ')'
+        ArrayList<String> items = new ArrayList<>(List.of(MdC.split("[- ]")));
+        for (String item: items){
+            if (StringUtils.countMatches(item, '(') != StringUtils.countMatches(item, ')')){
+                throw new MdCParseException(String.format(ILLEGAL_BRACKET_PROPORTION,
+                        StringUtils.countMatches(item, '('),
+                        StringUtils.countMatches(item, ')'), item));
+            }
+        }
+
         if (StringUtils.containsAny(separators.get(0), ':')){
             throw new MdCParseException(String.format(ILLEGAL_START_CHARACTER, ':', separators.get(0)));
         } else if (StringUtils.containsAny(separators.get(0), '*')){
@@ -211,7 +220,9 @@ public class MdCToGlyphX {
         return c == ' ' ||
                 c == '-' ||
                 c == ':' ||
-                c == '*';
+                c == '*' ||
+                c == '(' ||
+                c == ')';
     }
     
 }

@@ -22,4 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Glyph Convert"
 include(":app")
-//include(":glpyhconverter")
+include(":glyphconverter")
