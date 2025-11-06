@@ -5,7 +5,6 @@ import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_CHARACTER_COMBINATION;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_CHARACTER_COUNT;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_END_CHARACTER;
-import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_SINGLE_BRACKET;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_START_CHARACTER;
 
 import com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException;
@@ -21,6 +20,7 @@ import org.w3c.dom.Element;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,6 +90,16 @@ public class MdCToGlyphX {
 
         log.log(Level.INFO, "Separators raw: " + separators);
 
+        // Check if every item has same count of '(' and ')'
+        ArrayList<String> items = new ArrayList<>(List.of(MdC.split("[- ]")));
+        for (String item: items){
+            if (StringUtils.countMatches(item, '(') != StringUtils.countMatches(item, ')')){
+                throw new MdCParseException(String.format(ILLEGAL_BRACKET_PROPORTION,
+                        StringUtils.countMatches(item, '('),
+                        StringUtils.countMatches(item, ')'), item));
+            }
+        }
+
         // Check separators
         int counter = 0;
         for (String sep: separators){
@@ -108,32 +118,82 @@ public class MdCToGlyphX {
                 throw new MdCParseException(String.format(ILLEGAL_CHARACTER_COMBINATION, ':', '-', sep));
             }
 
-            // Crop "------" and "-- - - -" to "-", "  *   " to "*", "  :  " to ":" and "       " to " "
 
-            if (StringUtils.containsWhitespace(sep)){
-                sep = StringUtils.deleteWhitespace(sep);
-                if (sep.isEmpty()){
-                    sep = " ";
+            // Convert "))()()-(((()))(((" to "))-(((("
+            // Get ArrayLists with indexes (ids) from all instances of '(' and ')'
+            ArrayList<Integer> closedBracketIds = new ArrayList<>();
+            ArrayList<Integer> openedBracketIds = new ArrayList<>();
+            ArrayList<Integer> trashIds = new ArrayList<>();
+            CharacterIterator it2 = new StringCharacterIterator(sep);
+            while (it2.current() != CharacterIterator.DONE){
+                char current = it2.current();
+
+                if (current == ')'){
+                    closedBracketIds.add(it2.getIndex());
+                } else if (current == '(') {
+                    openedBracketIds.add(it2.getIndex());
+                }
+
+                it2.next();
+            }
+            // Delete indexes of brackets in this constellation: "( ... )'
+            for (Integer id: openedBracketIds){
+                int latestCB = Collections.max(closedBracketIds);
+                if (latestCB > id){
+                    // Put on trashList to delete from sep string
+                    trashIds.add(latestCB);
+                    trashIds.add(id);
+                    // Remove from ArrayLists
+                    closedBracketIds.remove(latestCB);
+                    openedBracketIds.remove(id);
                 }
             }
-            if (StringUtils.countMatches(sep, '-') > 1){
-                sep = "-";
+            // Sort and reverse trashList
+            Collections.sort(trashIds);
+            Collections.reverse(trashIds);
+
+            // Delete indexes stored in trashList
+            StringBuilder stringBuilder = new StringBuilder(sep);
+            for (Integer trash: trashIds){
+                stringBuilder.deleteCharAt(trash);
+            }
+            sep = stringBuilder.toString();
+
+            // Split String into 3 substrings: "))-((((" --> ["))", "-", "(((("]
+            int lastCB = sep.lastIndexOf(')') + 1;
+            int firstOB = sep.indexOf('(');
+            // Handle case that there are no brackets in the string
+            if (lastCB == 0){
+                lastCB = sep.length();
+            }
+            if (firstOB == -1){
+                firstOB = 0;
+            }
+            String firstString = sep.substring(0, lastCB);
+            String secondString = sep.substring(lastCB, firstOB);
+            String thirdString = sep.substring(firstOB);
+
+
+            // Crop "------" and "-- - - -" to "-", "  *   " to "*", "  :  " to ":" and "       " to " "
+
+            if (StringUtils.containsWhitespace(secondString)){
+                secondString = StringUtils.deleteWhitespace(secondString);
+                if (secondString.isEmpty()){
+                    secondString = " ";
+                }
+            }
+            if (StringUtils.countMatches(secondString, '-') > 1){
+                secondString = "-";
             }
 
-            separators.set(counter, sep);
+            // Combine strings back
+            stringBuilder = new StringBuilder(firstString);
+            stringBuilder.append(secondString);
+            stringBuilder.append(thirdString);
+            separators.set(counter, stringBuilder.toString());
 
             counter++;
 
-        }
-
-        // Check if every item has same count of '(' and ')'
-        ArrayList<String> items = new ArrayList<>(List.of(MdC.split("[- ]")));
-        for (String item: items){
-            if (StringUtils.countMatches(item, '(') != StringUtils.countMatches(item, ')')){
-                throw new MdCParseException(String.format(ILLEGAL_BRACKET_PROPORTION,
-                        StringUtils.countMatches(item, '('),
-                        StringUtils.countMatches(item, ')'), item));
-            }
         }
 
         if (StringUtils.containsAny(separators.get(0), ':')){
