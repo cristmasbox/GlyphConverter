@@ -8,6 +8,8 @@ public class MdCParseException extends RuntimeException {
     public static final String ILLEGAL_START_CHARACTER = "Illegal Start Character Exception: The char '%c' can not be used before the first id: \"%s\"";
     public static final String ILLEGAL_END_CHARACTER = "Illegal End Character Exception: The char '%c' can not be used after the last id: \"%s\"";
     public static final String ILLEGAL_BRACKET_PROPORTION = "Illegal Bracket Proportion Exception: The char '(' (counted %d times) has to be used in the same number as the char ')' (counted %d times): \"%s\"";
+    public static final String ILLEGAL_BETWEEN_BRACKET_CHARACTER = "Illegal Between Bracket Character Exception: The char '%c' is not allowed between two '(' or ')' brackets: \"%s\"";
+    public static final String ILLEGAL_BRACKET_POSITION = "Illegal Bracket Position Exception: The char '%c' cannot be at the %s of an MdC Code!";
 
     public static final String NOTE_LEARN_MORE = "\nTo learn more about MdC Codes visit: https://en.wikipedia.org/wiki/Manuel_de_Codage";
 

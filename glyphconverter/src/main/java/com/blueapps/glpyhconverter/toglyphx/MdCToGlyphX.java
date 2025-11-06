@@ -1,5 +1,7 @@
 package com.blueapps.glpyhconverter.toglyphx;
 
+import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_BETWEEN_BRACKET_CHARACTER;
+import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_BRACKET_POSITION;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_BRACKET_PROPORTION;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_CHARACTER;
 import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_CHARACTER_COMBINATION;
@@ -173,16 +175,35 @@ public class MdCToGlyphX {
             String secondString = sep.substring(lastCB, firstOB);
             String thirdString = sep.substring(firstOB);
 
-
-            // Crop "------" and "-- - - -" to "-", "  *   " to "*", "  :  " to ":" and "       " to " "
-
-            if (StringUtils.containsWhitespace(secondString)){
-                secondString = StringUtils.deleteWhitespace(secondString);
-                if (secondString.isEmpty()){
-                    secondString = " ";
-                }
+            // Check firstString
+            firstString = StringUtils.deleteWhitespace(firstString);
+            firstString = StringUtils.remove(firstString, '-');
+            if (StringUtils.containsAny(firstString, ':')){
+                throw new MdCParseException(String.format(ILLEGAL_BETWEEN_BRACKET_CHARACTER, ':', firstString + secondString + thirdString));
+            } else if (StringUtils.containsAny(firstString, '*')){
+                throw new MdCParseException(String.format(ILLEGAL_BETWEEN_BRACKET_CHARACTER, '*', firstString + secondString + thirdString));
             }
-            if (StringUtils.countMatches(secondString, '-') > 1){
+
+            // Check thirdString
+            thirdString = StringUtils.deleteWhitespace(thirdString);
+            thirdString = StringUtils.remove(thirdString, '-');
+            if (StringUtils.containsAny(thirdString, ':')){
+                throw new MdCParseException(String.format(ILLEGAL_BETWEEN_BRACKET_CHARACTER, ':', firstString + secondString + thirdString));
+            } else if (StringUtils.containsAny(thirdString, '*')){
+                throw new MdCParseException(String.format(ILLEGAL_BETWEEN_BRACKET_CHARACTER, '*', firstString + secondString + thirdString));
+            }
+
+            // Check secondString
+            // Convert "" to "-"
+            if (secondString.isEmpty()){
+                secondString = "-";
+            }
+            // Crop "------" and "-- - - -" to "-", "  *   " to "*", "  :  " to ":" and "       " to " "
+            secondString = StringUtils.deleteWhitespace(secondString);
+            if (secondString.isEmpty()){
+                secondString = " ";
+            }
+            if (StringUtils.containsAny(secondString, '-')){
                 secondString = "-";
             }
 
@@ -196,16 +217,21 @@ public class MdCToGlyphX {
 
         }
 
+        // Check separators at start or end of MdC Code
         if (StringUtils.containsAny(separators.get(0), ':')){
             throw new MdCParseException(String.format(ILLEGAL_START_CHARACTER, ':', separators.get(0)));
         } else if (StringUtils.containsAny(separators.get(0), '*')){
             throw new MdCParseException(String.format(ILLEGAL_START_CHARACTER, '*', separators.get(0)));
+        } else if (StringUtils.containsAny(separators.get(0), ')')){
+            throw new MdCParseException(String.format(ILLEGAL_BRACKET_POSITION, ')', "beginning"));
         }
         String endString = separators.get(separators.size() - 1);
         if (StringUtils.containsAny(endString, ':')){
             throw new MdCParseException(String.format(ILLEGAL_END_CHARACTER, ':', endString));
         } else if (StringUtils.containsAny(endString, '*')){
             throw new MdCParseException(String.format(ILLEGAL_END_CHARACTER, '*', endString));
+        } else if (StringUtils.containsAny(endString, '(')){
+            throw new MdCParseException(String.format(ILLEGAL_BRACKET_POSITION, '(', "end"));
         }
 
         log.log(Level.INFO, "Separators prepared: " + separators);
