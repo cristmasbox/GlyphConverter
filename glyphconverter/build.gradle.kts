@@ -18,7 +18,7 @@ publishing {
             from(components["java"])
             groupId = "com.github.cristmasbox"
             artifactId = "glyphconverter"
-            version = "1.0.0"
+            version = "1.5.0"
 
             pom {
                 name.set("GlpyhConverter")

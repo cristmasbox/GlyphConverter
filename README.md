@@ -21,7 +21,7 @@ dependencyResolutionManagement {
 Then add this dependency to your `build.gradle.kts` file:
 ```
 dependencies {
-  implementation("com.github.cristmasbox:GlyphConverter:1.0.0")
+  implementation("com.github.cristmasbox:GlyphConverter:1.5.0")
 }
 ```
 > [!NOTE]
@@ -41,5 +41,10 @@ dependencies {
 ## Version Catalog
 ### 25.10.2025@1.0.0
 This is the first release of the GlyphConverter library.
+### 07.11.2025@1.5.0
+Support for brackets in MdC added. Now you can type in:
+```
+N17:i*(p:t)*(t:p)*i:N17
+```
 ### latest Version
-`25.10.2025@1.0.0`
+`07.11.2025@1.5.0`
