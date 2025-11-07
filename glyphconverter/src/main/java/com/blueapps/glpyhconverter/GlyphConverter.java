@@ -29,13 +29,8 @@ public class GlyphConverter {
     public static final String XML_H_TAG = "h";
     public static final String XML_ID_ATTRIBUTE = "id";
 
-    public static String convertToMdC(String glyphX){
-        try {
-            return convertToMdC(convertToXmlDocument(glyphX));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static String convertToMdC(String glyphX) throws ParserConfigurationException, IOException, SAXException {
+        return convertToMdC(convertToXmlDocument(glyphX));
     }
 
     public static String convertToMdC(Document glyphX){
@@ -48,6 +43,10 @@ public class GlyphConverter {
 
     public static Document convertToGlyphXDocument(String MdC){
         return MdCToGlyphX.convert(MdC);
+    }
+
+    public static String cleanMdC(String MdC){
+        return MdCToGlyphX.checkMdC(MdC);
     }
 
     private static Document convertToXmlDocument(String xml) throws ParserConfigurationException, IOException, SAXException {

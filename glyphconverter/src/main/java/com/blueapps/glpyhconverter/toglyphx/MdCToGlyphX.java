@@ -44,7 +44,7 @@ public class MdCToGlyphX {
         return getGlyphX(checkMdC(MdC));
     }
 
-    private static String checkMdC(String MdC) throws MdCParseException{
+    public static String checkMdC(String MdC) throws MdCParseException{
         CharacterIterator it = new StringCharacterIterator(MdC);
 
         ArrayList<String> ids = new ArrayList<>();
@@ -92,16 +92,6 @@ public class MdCToGlyphX {
 
         log.log(Level.INFO, "Separators raw: " + separators);
 
-        // Check if every item has same count of '(' and ')'
-        ArrayList<String> items = new ArrayList<>(List.of(MdC.split("[- ]")));
-        for (String item: items){
-            if (StringUtils.countMatches(item, '(') != StringUtils.countMatches(item, ')')){
-                throw new MdCParseException(String.format(ILLEGAL_BRACKET_PROPORTION,
-                        StringUtils.countMatches(item, '('),
-                        StringUtils.countMatches(item, ')'), item));
-            }
-        }
-
         // Check separators
         int counter = 0;
         for (String sep: separators){
@@ -140,6 +130,9 @@ public class MdCToGlyphX {
             }
             // Delete indexes of brackets in this constellation: "( ... )'
             for (Integer id: openedBracketIds){
+                if (closedBracketIds.isEmpty()){
+                    break;
+                }
                 int latestCB = Collections.max(closedBracketIds);
                 if (latestCB > id){
                     // Put on trashList to delete from sep string
@@ -162,14 +155,16 @@ public class MdCToGlyphX {
             sep = stringBuilder.toString();
 
             // Split String into 3 substrings: "))-((((" --> ["))", "-", "(((("]
-            int lastCB = sep.lastIndexOf(')') + 1;
+            int lastCB = sep.lastIndexOf(')');
             int firstOB = sep.indexOf('(');
             // Handle case that there are no brackets in the string
-            if (lastCB == 0){
-                lastCB = sep.length();
+            if (lastCB == -1){
+                lastCB = 0;
+            } else {
+                lastCB++;
             }
             if (firstOB == -1){
-                firstOB = 0;
+                firstOB = sep.length();
             }
             String firstString = sep.substring(0, lastCB);
             String secondString = sep.substring(lastCB, firstOB);
@@ -225,6 +220,8 @@ public class MdCToGlyphX {
         } else if (StringUtils.containsAny(separators.get(0), ')')){
             throw new MdCParseException(String.format(ILLEGAL_BRACKET_POSITION, ')', "beginning"));
         }
+        separators.set(0, StringUtils.remove(separators.get(0), '-'));
+
         String endString = separators.get(separators.size() - 1);
         if (StringUtils.containsAny(endString, ':')){
             throw new MdCParseException(String.format(ILLEGAL_END_CHARACTER, ':', endString));
@@ -233,17 +230,28 @@ public class MdCToGlyphX {
         } else if (StringUtils.containsAny(endString, '(')){
             throw new MdCParseException(String.format(ILLEGAL_BRACKET_POSITION, '(', "end"));
         }
+        separators.set(separators.size() - 1, StringUtils.remove(endString, '-'));
 
         log.log(Level.INFO, "Separators prepared: " + separators);
 
-        int counter2 = 1;
+        int counter2 = 0;
         StringBuilder finalString = new StringBuilder();
         for (String id: ids){
+            finalString.append(separators.get(counter2));
             finalString.append(id);
-            if (counter2 != ids.size()) {
-                finalString.append(separators.get(counter2));
-            }
             counter2++;
+        }
+
+        finalString.append(separators.get(separators.size() - 1));
+
+        // Check if every item has same count of '(' and ')'
+        ArrayList<String> items = new ArrayList<>(List.of(finalString.toString().split("[- ]")));
+        for (String item: items){
+            if (StringUtils.countMatches(item, '(') != StringUtils.countMatches(item, ')')){
+                throw new MdCParseException(String.format(ILLEGAL_BRACKET_PROPORTION,
+                        StringUtils.countMatches(item, '('),
+                        StringUtils.countMatches(item, ')'), item));
+            }
         }
 
         return finalString.toString();
@@ -274,16 +282,23 @@ public class MdCToGlyphX {
 
     public static Element getElement(Document doc, String MdC){
 
-        Item item = null;
-        Element element = null;
+        // Remove root brackets "((a:b)*c)" --> "(a:b)*c"
+        MdC = removeRootBrackets(MdC);
 
-        if (StringUtils.containsNone(MdC, ':') && StringUtils.containsNone(MdC, '*')){
+        // Replace brackets with '#'
+        ArrayList<String> result = replaceBrackets(MdC);
+        String newMdC = result.get(0);
+
+        Item item = null;
+        Element element;
+
+        if (StringUtils.containsNone(newMdC, ':') && StringUtils.containsNone(newMdC, '*')){
             item = new SimpleItem();
-        } else if (StringUtils.containsAny(MdC, ':') && StringUtils.containsAny(MdC, '*')){
+        } else if (StringUtils.containsAny(newMdC, ':') && StringUtils.containsAny(newMdC, '*')){
             item = new VerticalGroup();
-        } else if (StringUtils.containsAny(MdC, ':')){
+        } else if (StringUtils.containsAny(newMdC, ':')){
             item = new VerticalGroup();
-        } else if (StringUtils.containsAny(MdC, '*')){
+        } else if (StringUtils.containsAny(newMdC, '*')){
             item = new HorizontalGroup();
         }
 
@@ -309,6 +324,61 @@ public class MdCToGlyphX {
                 c == '*' ||
                 c == '(' ||
                 c == ')';
+    }
+
+    public static ArrayList<String> replaceBrackets(String MdC){
+        // Replace brackets with '#'
+        StringBuilder newMdC = new StringBuilder();
+        ArrayList<String> brackets = new ArrayList<>();
+        StringBuilder currentBracket = new StringBuilder();
+        CharacterIterator it = new StringCharacterIterator(MdC);
+        int level = 0;
+        // Iterate characters
+        while (it.current() != CharacterIterator.DONE) {
+            char current = it.current();
+
+            if (current == '('){
+                level++;
+                if (level == 1){
+                    newMdC.append('#');
+                }
+                currentBracket.append(current);
+            } else if (current == ')'){
+                level--;
+                currentBracket.append(current);
+                if (level == 0){
+                    brackets.add(currentBracket.toString());
+                    currentBracket = new StringBuilder();
+                }
+            } else {
+                if (level == 0) {
+                    newMdC.append(current);
+                } else {
+                    currentBracket.append(current);
+                }
+            }
+
+            // Moving onto next element in the object using next() method
+            it.next();
+        }
+
+        ArrayList<String> result = new ArrayList<>();
+
+        result.add(newMdC.toString());
+
+        result.addAll(brackets);
+
+        return result;
+    }
+
+    public static String removeRootBrackets(String MdC){
+        if (MdC.charAt(0) == '(' && MdC.charAt(MdC.length() - 1) == ')'){
+            StringBuilder stringBuilder = new StringBuilder(MdC);
+            stringBuilder.deleteCharAt(MdC.length() - 1);
+            stringBuilder.deleteCharAt(0);
+            MdC = stringBuilder.toString();
+        }
+        return MdC;
     }
     
 }
