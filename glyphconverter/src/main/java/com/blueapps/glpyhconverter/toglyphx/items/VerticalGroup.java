@@ -2,9 +2,12 @@ package com.blueapps.glpyhconverter.toglyphx.items;
 
 import static com.blueapps.glpyhconverter.toglyphx.MdCToGlyphX.removeRootBrackets;
 import static com.blueapps.glpyhconverter.toglyphx.MdCToGlyphX.replaceBrackets;
+import static com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException.ILLEGAL_CHARACTER;
 
 import com.blueapps.glpyhconverter.toglyphx.MdCToGlyphX;
+import com.blueapps.glpyhconverter.toglyphx.exceptions.MdCParseException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -35,6 +38,23 @@ public class VerticalGroup extends ItemGroup{
             if (Objects.equals(item, "#")){
                 newItem = result.get(counter);
                 counter++;
+            } else if (StringUtils.containsAny(item, '#')){
+                StringBuilder stringBuilder = new StringBuilder();
+                // Iterate characters
+                CharacterIterator it = new StringCharacterIterator(item);
+                while (it.current() != CharacterIterator.DONE) {
+                    char current = it.current();
+
+                    if (current == '#'){
+                        stringBuilder.append(result.get(counter));
+                        counter++;
+                    } else {
+                        stringBuilder.append(current);
+                    }
+
+                    it.next();
+                }
+                newItem = stringBuilder.toString();
             }
 
             element.appendChild(MdCToGlyphX.getElement(doc, newItem));
