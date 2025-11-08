@@ -21,7 +21,7 @@ dependencyResolutionManagement {
 Then add this dependency to your `build.gradle.kts` file:
 ```
 dependencies {
-  implementation("com.github.cristmasbox:GlyphConverter:1.6.0")
+  implementation("com.github.cristmasbox:GlyphConverter:1.x.0")
 }
 ```
 > [!NOTE]
