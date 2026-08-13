@@ -16,6 +16,7 @@ import com.blueapps.glpyhconverter.toglyphx.items.BreakItem;
 import com.blueapps.glpyhconverter.toglyphx.items.HorizontalGroup;
 import com.blueapps.glpyhconverter.toglyphx.items.Item;
 import com.blueapps.glpyhconverter.toglyphx.items.SimpleItem;
+import com.blueapps.glpyhconverter.toglyphx.items.SpaceItem;
 import com.blueapps.glpyhconverter.toglyphx.items.VerticalGroup;
 
 import org.apache.commons.lang3.StringUtils;
@@ -316,6 +317,9 @@ public class MdCToGlyphX {
                 if (StringUtils.containsAny(item, '!')){
                     BreakItem item1 = new BreakItem();
                     rootElement.appendChild(item1.getElement(doc, item));
+                } else if (StringUtils.containsAny(item, '.')) {
+                    SpaceItem item2 = new SpaceItem();
+                    rootElement.appendChild(item2.getElement(doc, item));
                 } else {
                     rootElement.appendChild(getElement(doc, item));
                 }
@@ -340,7 +344,7 @@ public class MdCToGlyphX {
         Item item = null;
         Element element;
 
-        if (StringUtils.containsNone(newMdC, ':') && StringUtils.containsNone(newMdC, '*')){
+        if (StringUtils.containsNone(newMdC, ':') && StringUtils.containsNone(newMdC, '*') &&StringUtils.containsNone(newMdC, '.')){
             item = new SimpleItem();
         } else if (StringUtils.containsAny(newMdC, ':') && StringUtils.containsAny(newMdC, '*')){
             item = new VerticalGroup();
@@ -348,6 +352,8 @@ public class MdCToGlyphX {
             item = new VerticalGroup();
         } else if (StringUtils.containsAny(newMdC, '*')){
             item = new HorizontalGroup();
+        } else if (StringUtils.containsAny(newMdC, '.')) {
+            item = new SpaceItem();
         }
 
         if (item == null){
