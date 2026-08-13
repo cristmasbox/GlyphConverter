@@ -352,6 +352,7 @@ public class MdCToGlyphX {
 
         if (item == null){
             element = doc.createElement("unknown");
+            log.log(Level.WARNING, "Unknown item: \"" + MdC + "\"");
         } else {
             element = item.getElement(doc, MdC);
         }
