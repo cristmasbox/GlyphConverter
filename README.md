@@ -38,10 +38,10 @@ dependencies {
 > For the implementation for other build systems like `Groovy` see [here](https://jitpack.io/#ThothDroid/GlyphConverter/)
 
 ## Implementation with `.jar` file
-Download the `GlpyhConverter_versionname.jar` file from this repository, create a `libs` folder in your project directory and paste the file there. Then add this dependency to your `build.gradle.kts` file:
+Download the [`GlyphConverter_versionname.aar`](https://github.com/ThothDroid/GlyphConverter/releases/latest) file from the latest release, create a `libs` folder in your project directory and paste the file there. Then add this dependency to your `build.gradle.kts` file:
 ```
 dependencies {
-  implementation(files("../libs/GlpyhConverter_versionname.jar"))
+  implementation(files("../libs/GlyphConverter_versionname.aar"))
 }
 ```
 
@@ -49,6 +49,8 @@ dependencies {
 > If you renamed the `.jar` file you also have to change the name in the dependencies
 
 ## Version Catalog
+> [!IMPORTANT]
+> Since version `13.08.2026@1.8.0` the version catalog uses the new versioning system [see here](https://medium.com/@wassimsakri/the-ultimate-guide-to-versioning-in-software-development-e846eb292a0d).
 ### 25.10.2025@1.0.0
 This is the first release of the GlyphConverter library.
 ### 07.11.2025@1.5.0
@@ -69,5 +71,7 @@ N17:i*(p:t)*(t:p)*i:N17
 - Support for page break and line break added:
   - `<br/>`: `!`
   - `<pbr/>`: `!!`
+### 13.08.2026@1.8.0
+- 5
 ### latest Version
-`07.12.2025@1.7.0`
+`07.12.2025@1.8.0`
