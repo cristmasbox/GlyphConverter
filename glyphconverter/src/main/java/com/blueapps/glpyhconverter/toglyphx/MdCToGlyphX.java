@@ -135,7 +135,7 @@ public class MdCToGlyphX {
 
                 it2.next();
             }
-            // Delete indexes of brackets in this constellation: "( ... )'
+            // Delete indexes of brackets in this constellation: "( ... )"
             for (Integer id: openedBracketIds){
                 if (closedBracketIds.isEmpty()){
                     break;
