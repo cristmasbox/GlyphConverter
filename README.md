@@ -31,7 +31,7 @@ dependencyResolutionManagement {
 Then add this dependency to your `build.gradle.kts` file:
 ```
 dependencies {
-  implementation("com.github.ThothDroid:GlyphConverter:1.7.0")
+  implementation("com.github.ThothDroid:GlyphConverter:1.8.0")
 }
 ```
 > [!NOTE]
