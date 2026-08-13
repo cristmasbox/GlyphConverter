@@ -231,6 +231,7 @@ public class MdCToGlyphX {
                     throw new MdCParseException(String.format(ILLEGAL_ALPHA_NUMERIC_COMBINATION, '!', id));
                 }
 
+                // Check if '!' is on root position
                 String sepBefore = separators.get(counter2);
                 String sepAfter = separators.get(counter2 + 1);
                 if (StringUtils.containsAny(sepBefore, '*') ||
