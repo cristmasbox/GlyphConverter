@@ -2,7 +2,7 @@ package com.blueapps.glpyhconverter.tomdc.items;
 
 public class BreakItem extends Item{
 
-    boolean pageBreak = false;
+    boolean pageBreak;
 
     public BreakItem(boolean pageBreak){
         this.pageBreak = pageBreak;
