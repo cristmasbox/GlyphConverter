@@ -18,7 +18,7 @@ publishing {
             from(components["java"])
             groupId = "com.github.ThothDroid"
             artifactId = "glyphconverter"
-            version = "1.7.0"
+            version = "1.8.0"
 
             pom {
                 name.set("GlpyhConverter")

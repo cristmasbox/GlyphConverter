@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace = "com.blueapps.glyphconvert"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.blueapps.glyphconvert"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 170
-        versionName = "07.12.2025@1.7.0"
+        targetSdk = 37
+        versionCode = 180
+        versionName = "13.08.2026@1.8.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
