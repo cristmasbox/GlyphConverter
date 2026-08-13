@@ -48,6 +48,26 @@ dependencies {
 > [!IMPORTANT]
 > If you renamed the `.jar` file you also have to change the name in the dependencies
 
+## Supported Codes
+The GlyphConverter library supports the following codes:
+- On `GlyphX` input the following tags are supported:
+  - `<sign id="X"/>` A single sign. The id is the code of the hieroglyph. The library supports both Gardiner's Sign List and their phonetic alternates.
+  - `<v></v>` Items inside are arranged vertically
+  - `<h></h>` Items inside are arranged horizontally
+  - `<br/>` A line break
+  - `<pbr/>` A page break
+  - `<space/>` Acts as a space between signs with half of the size of a whole group.
+  - `<gap/>` The same as `<space/>` but with a width and height equal to the size of a whole group.
+- On `MdC` input the following signs are supported:
+  - `X` A single sign. The library supports both Gardiner's Sign List and their phonetic alternates.
+  - `:` Items separated by it are arranged vertically
+  - `*` Items separated by it are arranged horizontally
+  - `(` and `)` Items inside are grouped and the whole group is treated as a single sign. This is useful for complex groups. (In `GlyphX` the groups are implied by the XML structure, so they are not needed there)
+  - `!` A line break
+  - `!!` A page break
+  - `.` Acts as a space between signs with half of the size of a whole group.
+  - `..` The same as `.` but with a width and height equal to the size of a whole group.
+
 ## Version Catalog
 > [!IMPORTANT]
 > Since version `13.08.2026@1.8.0` the version catalog uses the new versioning system [see here](https://medium.com/@wassimsakri/the-ultimate-guide-to-versioning-in-software-development-e846eb292a0d).
