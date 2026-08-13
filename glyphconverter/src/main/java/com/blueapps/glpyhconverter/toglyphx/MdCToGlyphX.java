@@ -243,6 +243,15 @@ public class MdCToGlyphX {
                     throw new MdCParseException(String.format(ILLEGAL_CHARACTER_COMBINATION, '!', ':', sepBefore + id + sepAfter));
                 }
             }
+            // Prevent combinations like "A1.", ".r." or "...."
+            if (StringUtils.containsAny(id, '.')) {
+                String checkId = StringUtils.remove(id, '.');
+                if (StringUtils.countMatches(id, '.') > 2) {
+                    throw new MdCParseException(String.format(ILLEGAL_ID_CHARACTER_COUNT, '.', StringUtils.countMatches(id, '.'), id));
+                } else if (!checkId.isEmpty()) {
+                    throw new MdCParseException(String.format(ILLEGAL_ALPHA_NUMERIC_COMBINATION, '.', id));
+                }
+            }
             counter2++;
         }
 
