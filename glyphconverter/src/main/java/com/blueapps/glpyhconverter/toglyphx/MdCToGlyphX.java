@@ -317,9 +317,6 @@ public class MdCToGlyphX {
                 if (StringUtils.containsAny(item, '!')){
                     BreakItem item1 = new BreakItem();
                     rootElement.appendChild(item1.getElement(doc, item));
-                } else if (StringUtils.containsAny(item, '.')) {
-                    SpaceItem item2 = new SpaceItem();
-                    rootElement.appendChild(item2.getElement(doc, item));
                 } else {
                     rootElement.appendChild(getElement(doc, item));
                 }
