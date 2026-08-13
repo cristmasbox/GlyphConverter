@@ -363,6 +363,7 @@ public class MdCToGlyphX {
 
     public static boolean isIdChar(char c){
         return c == '!' ||
+                c == '.' ||
                 Character.isAlphabetic(c) ||
                 Character.isDigit(c);
     }
