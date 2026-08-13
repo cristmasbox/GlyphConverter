@@ -38,10 +38,10 @@ dependencies {
 > For the implementation for other build systems like `Groovy` see [here](https://jitpack.io/#ThothDroid/GlyphConverter/)
 
 ## Implementation with `.jar` file
-Download the [`GlyphConverter_versionname.aar`](https://github.com/ThothDroid/GlyphConverter/releases/latest) file from the latest release, create a `libs` folder in your project directory and paste the file there. Then add this dependency to your `build.gradle.kts` file:
+Download the [`GlyphConverter_versionname.jar`](https://github.com/ThothDroid/GlyphConverter/releases/latest) file from the latest release, create a `libs` folder in your project directory and paste the file there. Then add this dependency to your `build.gradle.kts` file:
 ```
 dependencies {
-  implementation(files("../libs/GlyphConverter_versionname.aar"))
+  implementation(files("../libs/GlyphConverter_versionname.jar"))
 }
 ```
 
