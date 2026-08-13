@@ -72,6 +72,8 @@ N17:i*(p:t)*(t:p)*i:N17
   - `<br/>`: `!`
   - `<pbr/>`: `!!`
 ### 13.08.2026@1.8.0
-- 5
+- Support for space between signs added:
+  - `<space/>`: `.`
+  - `<gap/>`: `..`
 ### latest Version
 `07.12.2025@1.8.0`
