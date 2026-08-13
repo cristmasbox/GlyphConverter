@@ -1,10 +1,12 @@
 package com.blueapps.glpyhconverter.tomdc;
 
 import static com.blueapps.glpyhconverter.GlyphConverter.XML_BREAK_TAG;
+import static com.blueapps.glpyhconverter.GlyphConverter.XML_GAP_TAG;
 import static com.blueapps.glpyhconverter.GlyphConverter.XML_H_TAG;
 import static com.blueapps.glpyhconverter.GlyphConverter.XML_ID_ATTRIBUTE;
 import static com.blueapps.glpyhconverter.GlyphConverter.XML_PAGE_BREAK_TAG;
 import static com.blueapps.glpyhconverter.GlyphConverter.XML_SIGN_TAG;
+import static com.blueapps.glpyhconverter.GlyphConverter.XML_SPACE_TAG;
 import static com.blueapps.glpyhconverter.GlyphConverter.XML_V_TAG;
 import static com.blueapps.glpyhconverter.GlyphConverter.XML_ROOT_TAG;
 import static com.blueapps.glpyhconverter.tomdc.exceptions.GlyphXParserException.WRONG_ROOT_TAG;
@@ -14,6 +16,7 @@ import com.blueapps.glpyhconverter.tomdc.items.BreakItem;
 import com.blueapps.glpyhconverter.tomdc.items.HorizontalGroup;
 import com.blueapps.glpyhconverter.tomdc.items.Item;
 import com.blueapps.glpyhconverter.tomdc.items.SimpleItem;
+import com.blueapps.glpyhconverter.tomdc.items.SpaceItem;
 import com.blueapps.glpyhconverter.tomdc.items.VerticalGroup;
 
 import org.w3c.dom.Comment;
@@ -113,6 +116,14 @@ public class GlyphXToMdC {
         } else if (root && Objects.equals(element.getTagName(), XML_BREAK_TAG)){
 
             return new BreakItem(false);
+
+        } else if (Objects.equals(element.getTagName(), XML_SPACE_TAG)) {
+
+            return new SpaceItem(false);
+
+        } else if (Objects.equals(element.getTagName(), XML_GAP_TAG)) {
+
+            return new SpaceItem(true);
 
         }
 
